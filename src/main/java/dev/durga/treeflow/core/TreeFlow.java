@@ -1,23 +1,30 @@
 package dev.durga.treeflow.core;
 
-
-import java.util.function.Supplier;
+import java.util.Collection;
 
 public class TreeFlow<IN> {
 
-    private Supplier<IN> source;
+    public static <IN> TreeFlow<IN> create(Node<IN, ?> node, Sink<IN> errFlow) {
+        return new TreeFlow<>(node, errFlow);
+    }
+
+    public static <IN> TreeFlow<IN> create(Node<IN, ?> node) {
+        return new TreeFlow<>(node, null);
+    }
+
+    private Sink<IN> errFlow;
     private Node<IN, ?> node;
 
-    private Flow<IN, Void> errFlow;
 
-    public TreeFlow(Supplier<IN> source, Node node, Flow<IN, Void> errFlow) {
-        this.source = source;
+    private TreeFlow(Node<IN, ?> node, Sink<IN> errFlow) {
         this.node = node;
         this.errFlow = errFlow;
     }
 
-    public void flow() {
+    public void startFlow(Collection<IN> ins) {
         this.node.start();
+
+        Source<IN> source = new Source<>(ins);
 
         while(true) {
 
@@ -28,8 +35,8 @@ public class TreeFlow<IN> {
                 this.node.flow(in, enriched);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                if (errFlow != null) {
-                    errFlow.flow(in , enriched);
+                if (this.errFlow != null) {
+                    this.errFlow.flow(in, enriched);
                 }
             }
 
@@ -40,4 +47,6 @@ public class TreeFlow<IN> {
 
         this.node.end();
     }
+
+
 }

@@ -33,10 +33,10 @@ public class Node<IN, OUT> {
         return root;
     }
 
-    public <DATA> Node<OUT, DATA> map(Flow<OUT, DATA> flow) {
-        Node<OUT, DATA> outNode = new Node<>(flow);
+    public <X,Y> Node<X,Y> sink(Sink<OUT> flow) {
+        Node<OUT, Void> outNode = new Node<>(flow);
         addChild(outNode);
-        return outNode;
+        return this.root;
     }
 
     public <DATA> Node<OUT, DATA> map(Function<OUT, DATA> func) {
@@ -46,7 +46,7 @@ public class Node<IN, OUT> {
     }
 
 
-    public <DATA> Node<OUT, OUT> mapWithEnrich(Function<Enriched, DATA> func) {
+    public <DATA> Node<OUT, OUT> enrich(Function<Enriched, DATA> func) {
         Node<OUT, OUT> outNode = new Node<>((out, enriched) -> {
             DATA data = func.apply(enriched);
             enriched.enrichWith(data);
@@ -56,10 +56,25 @@ public class Node<IN, OUT> {
         return outNode;
     }
 
+    public <DATA> Node<OUT, DATA> mapWithEnrich(Function<Enriched, DATA> func) {
+        Node<OUT, DATA> outNode = new Node<>((out, enriched) -> {
+            DATA data = func.apply(enriched);
+            enriched.enrichWith(data);
+            return data;
+        });
+        addChild(outNode);
+        return outNode;
+    }
 
 
-    public <EXT> Node<OUT, ?> reconcile(Function<OUT, String> outId, Map<String,EXT> externalData, BiFunction<OUT, EXT, ?> biFlow) {
-        Node<OUT, ?> outNode = new Node<>(BiFlow.create(outId, externalData, biFlow));
+
+    public <EXT, DATA> Node<OUT, DATA> reconcile(
+        Function<OUT, String> outId,
+        Map<String,EXT> externalData,
+        BiFunction<OUT, EXT, DATA> biFlow,
+        TreeFlow<EXT> lefOverTreeFlow
+        ) {
+        Node<OUT, DATA> outNode = new Node<>(BiFlow.create(outId, externalData, biFlow, lefOverTreeFlow));
         addChild(outNode);
         return outNode;
     }
