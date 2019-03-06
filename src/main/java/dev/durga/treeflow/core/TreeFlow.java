@@ -1,6 +1,9 @@
 package dev.durga.treeflow.core;
 
+import dev.durga.treeflow.core.flow.Sink;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.function.Supplier;
 
 public class TreeFlow<IN> {
 
@@ -24,9 +27,9 @@ public class TreeFlow<IN> {
     public void startFlow(Collection<IN> ins) {
         this.node.start();
 
-        Source<IN> source = new Source<>(ins);
+      Supplier<IN> source = getSupplier(ins);
 
-        while(true) {
+      while(true) {
 
             IN in = source.get();
             Enriched enriched = new Enriched();
@@ -47,6 +50,16 @@ public class TreeFlow<IN> {
 
         this.node.end();
     }
+
+  private Supplier<IN> getSupplier(Collection<IN> ins) {
+    return new Supplier<IN>() {
+              private final Iterator<IN> iterator = ins.iterator();
+              @Override
+              public IN get() {
+                  return this.iterator.hasNext() ? this.iterator.next() : null;
+              }
+          };
+  }
 
 
 }

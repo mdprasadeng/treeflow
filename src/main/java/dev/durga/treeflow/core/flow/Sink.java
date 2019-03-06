@@ -1,5 +1,6 @@
-package dev.durga.treeflow.core;
+package dev.durga.treeflow.core.flow;
 
+import dev.durga.treeflow.core.Enriched;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,5 +1,8 @@
 package dev.durga.treeflow.core;
 
+import dev.durga.treeflow.core.flow.BiFlow;
+import dev.durga.treeflow.core.flow.Flow;
+import dev.durga.treeflow.core.flow.Sink;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +77,8 @@ public class Node<IN, OUT> {
         BiFunction<OUT, EXT, DATA> biFlow,
         TreeFlow<EXT> lefOverTreeFlow
         ) {
-        Node<OUT, DATA> outNode = new Node<>(BiFlow.create(outId, externalData, biFlow, lefOverTreeFlow));
+        Node<OUT, DATA> outNode = new Node<>(BiFlow
+            .create(outId, externalData, biFlow, lefOverTreeFlow));
         addChild(outNode);
         return outNode;
     }

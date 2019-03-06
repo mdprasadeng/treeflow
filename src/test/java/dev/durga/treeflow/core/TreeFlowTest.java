@@ -1,5 +1,6 @@
 package dev.durga.treeflow.core;
 
+import dev.durga.treeflow.core.flow.Sink;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;

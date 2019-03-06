@@ -1,5 +1,7 @@
-package dev.durga.treeflow.core;
+package dev.durga.treeflow.core.flow;
 
+import dev.durga.treeflow.core.Enriched;
+import dev.durga.treeflow.core.TreeFlow;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
