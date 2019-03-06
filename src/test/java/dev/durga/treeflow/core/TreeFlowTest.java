@@ -26,7 +26,6 @@ public class TreeFlowTest {
     Node<DataA, DataA> rootNode = Node.<DataA>newNode()
         .map(a -> new DataB(a.getFieldA()))
         .map(b -> new DataC(b.getFieldB()))
-        .enrich(enriched -> new DataD(enriched.getData(DataC.class).getFieldC()))
         .child(
             Node.<DataC>newNode()
                 .map(e -> Math.abs(e.getFieldC().hashCode() % 3) == 0 ? e : null)
